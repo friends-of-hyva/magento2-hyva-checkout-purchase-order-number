@@ -1,0 +1,19 @@
+{
+    "name": "friends-of-hyva/purchase-order-number",
+    "description": "Hyvä Themes Checkout Module - addon Purchase Order Number",
+    "type": "magento2-module",
+    "require": {
+        "hyva-themes/magento2-hyva-checkout": "^1.1"
+    },
+    "license": [
+        "MIT"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "HyvaCheckout\\PurchaseOrderNumber\\": ""
+        }
+    }
+}

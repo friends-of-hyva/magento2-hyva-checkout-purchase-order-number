@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd"
+>
+    <system>
+        <section id="hyva_themes_checkout">
+            <group id="component">
+                <include path="HyvaCheckout_PurchaseOrderNumber::system/component/purchase_order_number.xml"/>
+            </group>
+        </section>
+    </system>
+</config>

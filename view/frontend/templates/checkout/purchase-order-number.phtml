@@ -1,0 +1,63 @@
+<?php
+
+declare(strict_types=1);
+
+use HyvaCheckout\PurchaseOrderNumber\Magewire\Checkout\PurchaseOrderNumber;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Escaper;
+
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+/** @var PurchaseOrderNumber $magewire */
+
+$iconsViewModel = $viewModels->require(HeroiconsOutline::class);
+$viewModel = $viewModels->require(HyvaCheckout\PurchaseOrderNumber\ViewModel\Checkout\PurchaseOrderNumber::class);
+?>
+<div class="border-t border-gray-400 pt-4">
+    <div x-data="{
+            content: $wire.purchase_order_number ?? '',
+            limit: $el.dataset.limit,
+            get remaining() {
+                return this.limit - this.content.length
+            }
+         }" x-init="$watch('limit')" data-limit="250">
+        <div class="flex justify-between text-sm font-medium">
+            <label class="block text-gray-700 mb-3" for="purchase-order-number">
+                <?= $escaper->escapeHtml(__('Purchase Order Number')) ?> (<?= /* @noEscape */ strtolower($escaper->escapeHtml(__('Optional'))) ?>)
+            </label>
+
+            <div class="text-green-500 space-x-4">
+                <span class="hidden" wire:loading wire:target="purchase_order_number" wire:loading.class.remove="hidden">
+                    ...<?= $escaper->escapeHtml(__('saving')) ?>
+                </span>
+
+                <?php if ($magewire->saved) : ?>
+                    <span wire:target="purchase_order_number" class="flex" wire:loading.class="hidden">
+                        <?= $escaper->escapeHtml(__('saved successfully')) ?>
+                    </span>
+                <?php endif ?>
+            </div>
+        </div>
+
+        <input id="purchase-order-number" wire:model.delay.750ms="purchase_order_number" x-ref="content" x-bind:maxlength="limit" x-model="content" type="text" class="block w-full
+                         shadow-sm
+                         border-gray-300 rounded-md
+                         resize-y" <?php if ($viewModel->hasPlaceholderText()) : ?> placeholder="<?= $escaper->escapeHtmlAttr($viewModel->getPlaceholderText()) ?>" <?php endif ?> />
+
+        <div class="w-full flex flex-row-reverse mt-1 font" x-ref="remaining" x-cloak>
+            <span x-text="(remaining + '/' + limit)" x-show="remaining < 75 && remaining !== 0" x-bind:class="{
+                      25: 'text-green-700',
+                      50: 'text-purple-700 font-medium',
+                      75: 'text-yellow-600 font-semibold',
+                      100: 'text-red-600 font-bold'
+                  }[(100 - (Math.round(remaining / 25) * 25))]"></span>
+
+            <div x-ref="remaining">
+                <p class="text-red-700" x-show="remaining === 0">
+                    <?= $escaper->escapeHtml(__('You\'ve reached the maximum amount of characters')) ?>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

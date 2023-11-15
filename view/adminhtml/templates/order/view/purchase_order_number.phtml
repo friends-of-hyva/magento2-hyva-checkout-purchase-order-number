@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * @var \Magento\Sales\Block\Adminhtml\Order\View\Info $block
+ */
+$order = $block->getOrder();
+?>
+
+<tr>
+    <th><?= $block->escapeHtml(__('Purchase Order Number')) ?></th>
+    <td><span id="order_status"><?= $block->escapeHtml($order->getPurchaseOrderNumber()) ?></span></td>
+</tr>

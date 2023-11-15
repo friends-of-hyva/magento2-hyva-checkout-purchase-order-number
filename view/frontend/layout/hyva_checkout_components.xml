@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <body>
+        <referenceContainer name="checkout.section.additional-options">
+            <block name="checkout.purchase-order-number"
+                    template="HyvaCheckout_PurchaseOrderNumber::checkout/purchase-order-number.phtml"
+                    ifconfig="hyva_themes_checkout/component/purchase_order_number/enable"
+            >
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        \HyvaCheckout\PurchaseOrderNumber\Magewire\Checkout\PurchaseOrderNumber
+                    </argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>
+
