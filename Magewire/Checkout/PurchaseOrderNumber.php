@@ -5,26 +5,33 @@ declare(strict_types=1);
 namespace HyvaCheckout\PurchaseOrderNumber\Magewire\Checkout;
 
 use Exception;
+use Hyva\Checkout\Model\Magewire\Component\EvaluationInterface;
+use Hyva\Checkout\Model\Magewire\Component\EvaluationResultFactory;
+use Hyva\Checkout\Model\Magewire\Component\EvaluationResultInterface;
+use HyvaCheckout\PurchaseOrderNumber\Model\ConfigData\HyvaThemes\SystemConfigPurchaseOrderNumber;
 use Magento\Checkout\Model\Session as SessionCheckout;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magewirephp\Magewire\Component;
 
-class PurchaseOrderNumber extends Component
+class PurchaseOrderNumber extends Component implements EvaluationInterface
 {
     public ?string $purchase_order_number = null;
     public bool $saved = false;
 
     protected SessionCheckout $sessionCheckout;
     protected CartRepositoryInterface $quoteRepository;
+    protected SystemConfigPurchaseOrderNumber $systemConfig;
 
     public function __construct(
         SessionCheckout $sessionCheckout,
-        CartRepositoryInterface $quoteRepository
+        CartRepositoryInterface $quoteRepository,
+        SystemConfigPurchaseOrderNumber $systemConfig
     ) {
         $this->sessionCheckout = $sessionCheckout;
         $this->quoteRepository = $quoteRepository;
+        $this->systemConfig = $systemConfig;
     }
 
     /**
@@ -52,5 +59,20 @@ class PurchaseOrderNumber extends Component
         }
 
         return $value;
+    }
+
+    public function evaluateCompletion(EvaluationResultFactory $resultFactory): EvaluationResultInterface
+    {
+        if ($this->systemConfig->isRequired() && empty($this->purchase_order_number)) {
+            return $resultFactory->createErrorEvent(
+                ['error' => __('This is a required field.')],
+                'po-number-evaluation-error-event'
+            );
+        }
+
+        return $resultFactory->createSuccess(
+            ['error' => ''],
+            'po-number-evaluation-error-event'
+        );
     }
 }

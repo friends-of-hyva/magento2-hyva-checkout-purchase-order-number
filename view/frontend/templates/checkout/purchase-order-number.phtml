@@ -40,11 +40,27 @@ $viewModel = $viewModels->require(HyvaCheckout\PurchaseOrderNumber\ViewModel\Che
             </div>
         </div>
 
-        <input id="purchase-order-number" wire:model.delay.750ms="purchase_order_number" x-ref="content" x-bind:maxlength="limit" x-model="content" type="text" class="block w-full
-                         shadow-sm
-                         border-gray-300 rounded-md
-                         resize-y" <?php if ($viewModel->hasPlaceholderText()) : ?> placeholder="<?= $escaper->escapeHtmlAttr($viewModel->getPlaceholderText()) ?>" <?php endif ?> />
+        <div
+            x-data="{ message: '' }"
+            :class="{ 'field-error': message.length > 0 }"
+            @po-number-evaluation-error-event.window="message = $event.detail.error"
+        >
+            <div>
+                <input id="purchase-order-number"
+                       wire:model.delay.750ms="purchase_order_number"
+                       x-ref="content"
+                       x-bind:maxlength="limit"
+                       x-model="content"
+                       type="text"
+                       class="block w-full shadow-sm border-gray-300 rounded-md resize-y"
+                    <?php if ($viewModel->hasPlaceholderText()) : ?> placeholder="<?= $escaper->escapeHtmlAttr($viewModel->getPlaceholderText()) ?>" <?php endif ?>
+                />
+            </div>
 
+            <template x-if="message.length > 0">
+                <span class="messages" x-text="message"></span>
+            </template>
+        </div>
         <div class="w-full flex flex-row-reverse mt-1 font" x-ref="remaining" x-cloak>
             <span x-text="(remaining + '/' + limit)" x-show="remaining < 75 && remaining !== 0" x-bind:class="{
                       25: 'text-green-700',
