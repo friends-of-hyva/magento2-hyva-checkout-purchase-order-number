@@ -7,6 +7,7 @@
             <component>
                 <purchase_order_number>
                     <enable>1</enable>
+                    <required>0</required>
                 </purchase_order_number>
             </component>
         </hyva_themes_checkout>

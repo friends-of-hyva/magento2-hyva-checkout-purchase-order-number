@@ -16,6 +16,12 @@ class SystemConfigPurchaseOrderNumber
         $this->systemConfigComponents = $systemConfigComponents;
     }
 
+    public function isRequired(): bool
+    {
+        return $this->systemConfigComponents
+            ->isSetFlagForComponent('required', 'purchase_order_number');
+    }
+
     public function getPlaceholderText(): string
     {
         return $this->systemConfigComponents->getComponentValue('placeholder', 'purchase_order_number') ?? '';
